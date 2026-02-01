@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Be My Valentine</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+    font-family: 'Segoe UI', sans-serif;
+    overflow:hidden;
+}
+
+.box{
+    width:360px;
+    height:300px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    text-align:center;
+    padding:20px;
+    position:relative;
+}
+
+h2{
+    margin-top:25px;
+    color:#ff4d6d;
+}
+
+.btn{
+    position:absolute;
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap; /* prevents resize */
+    width:95px;         /* fixed size */
+    height:45px;        /* fixed size */
+}
+
+#yes{
+    background:#ff4d6d;
+    color:white;
+    left:60px;
+    bottom:40px;
+}
+
+#no{
+    background:#777;
+    color:white;
+    right:60px;
+    bottom:40px;
+}
+
+.result{
+    display:none;
+    font-size:26px;
+    margin-top:50px;
+    animation:pop 0.5s ease forwards;
+}
+
+@keyframes pop{
+    from{transform:scale(0);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+/* Fireworks */
+.fireworks{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:hidden;
+    display:none;
+}
+
+.spark{
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    animation:explode 1s ease-out forwards;
+}
+
+@keyframes explode{
+    from{transform:translate(0,0);opacity:1;}
+    to{transform:translate(var(--x), var(--y));opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="box">
+    <h2>Will you be my Valentine, Sandhya? ❤️</h2>
+
+    <button class="btn" id="yes">Yes 💖</button>
+    <button class="btn" id="no">No 😜</button>
+
+    <div class="result" id="result">
+        Thanks for being mine 😘🎉
+    </div>
+</div>
+
+<div class="fireworks" id="fireworks"></div>
+
+<script>
+const noBtn = document.getElementById("no");
+const box = document.getElementById("box");
+const yesBtn = document.getElementById("yes");
+const result = document.getElementById("result");
+const fireworks = document.getElementById("fireworks");
+
+// Runaway NO button (no resize, smooth)
+noBtn.addEventListener("mouseover", () => {
+    const boxRect = box.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const maxX = boxRect.width - btnRect.width - 20;
+    const maxY = boxRect.height - btnRect.height - 20;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+// YES click
+yesBtn.addEventListener("click", () => {
+    result.style.display = "block";
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    startFireworks();
+});
+
+// Fireworks
+function startFireworks(){
+    fireworks.style.display = "block";
+
+    for(let i=0;i<80;i++){
+        const spark = document.createElement("div");
+        spark.classList.add("spark");
+        spark.style.background = randomColor();
+        spark.style.left = "50%";
+        spark.style.top = "50%";
+
+        spark.style.setProperty('--x', (Math.random()*600 - 300) + 'px');
+        spark.style.setProperty('--y', (Math.random()*600 - 300) + 'px');
+
+        fireworks.appendChild(spark);
+        setTimeout(()=> spark.remove(),1000);
+    }
+}
+
+function randomColor(){
+    const colors = ["#ff4d6d","#ffbe0b","#3a86ff","#8338ec","#06d6a0"];
+    return colors[Math.floor(Math.random()*colors.length)];
+}
+</script>
+
+</body>
+</html>
